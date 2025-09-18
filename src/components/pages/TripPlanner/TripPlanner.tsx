@@ -15,26 +15,40 @@ import { Notification, NotificationGroup } from '@progress/kendo-react-notificat
 const TripPlanner: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [dateRange, setDateRange] = useState<{ start: Date | null; end: Date | null }>({ start: null, end: null });
+  const [tripName, setTripName] = useState('');
+  const [destination, setDestination] = useState('');
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  
   // Sample itinerary data (replace with CRUD logic)
   const [itinerary, setItinerary] = useState([
     {
       id: 1,
-      title: 'Breakfast',
-      start: new Date(2023, 10, 1, 8, 0),
-      end: new Date(2023, 10, 1, 9, 0),
+      title: 'Morning Breakfast',
+      start: new Date(2024, 11, 15, 8, 0),
+      end: new Date(2024, 11, 15, 9, 0),
+      description: 'Local cafe breakfast'
     },
     {
       id: 2,
-      title: 'Sightseeing',
-      start: new Date(2023, 10, 1, 10, 0),
-      end: new Date(2023, 10, 1, 12, 0),
+      title: 'City Sightseeing',
+      start: new Date(2024, 11, 15, 10, 0),
+      end: new Date(2024, 11, 15, 14, 0),
+      description: 'Walking tour of historic district'
+    },
+    {
+      id: 3,
+      title: 'Museum Visit',
+      start: new Date(2024, 11, 15, 15, 0),
+      end: new Date(2024, 11, 15, 17, 0),
+      description: 'Art museum exploration'
     },
   ]);
 
   const steps = [
-    { label: 'Select Dates' },
-    { label: 'Plan Itinerary' },
+    { label: 'Trip Details', text: 'Basic Information' },
+    { label: 'Select Dates', text: 'Choose Your Dates' },
+    { label: 'Plan Activities', text: 'Build Your Itinerary' },
+    { label: 'Review & Save', text: 'Finalize Your Trip' }
   ];
 
   const handleStepChange = (event: StepperChangeEvent) => {
@@ -45,34 +59,79 @@ const TripPlanner: React.FC = () => {
     setDateRange(event.value);
   };
 
-  // Example: Show notification on step complete
   const handleNext = () => {
-    if (!dateRange.start || !dateRange.end) {
+    if (currentStep === 0 && (!tripName || !destination)) {
+      setNotification({ type: 'error', message: 'Please enter trip name and destination.' });
+      return;
+    }
+    if (currentStep === 1 && (!dateRange.start || !dateRange.end)) {
       setNotification({ type: 'error', message: 'Please select a valid date range.' });
       return;
     }
-    setCurrentStep(1);
-    setNotification({ type: 'success', message: 'Trip dates selected!' });
+    
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+      setNotification({ type: 'success', message: `Step ${currentStep + 1} completed!` });
+    }
   };
 
-  // Example: Add itinerary item (replace with real CRUD)
-  const addItineraryItem = () => {
-    setItinerary([
-      ...itinerary,
-      {
-        id: itinerary.length + 1,
-        title: 'New Activity',
-        start: new Date(),
-        end: new Date(),
-      },
-    ]);
-    setNotification({ type: 'success', message: 'Itinerary item added!' });
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const addActivity = () => {
+    const newActivity = {
+      id: itinerary.length + 1,
+      title: 'New Activity',
+      start: dateRange.start || new Date(),
+      end: new Date((dateRange.start || new Date()).getTime() + 2 * 60 * 60 * 1000), // 2 hours later
+      description: 'Click to edit this activity'
+    };
+    setItinerary([...itinerary, newActivity]);
+    setNotification({ type: 'success', message: 'Activity added to your itinerary!' });
+  };
+
+  const saveTripPlan = () => {
+    // TODO: Implement save logic with backend
+    setNotification({ type: 'success', message: 'Trip plan saved successfully!' });
   };
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #0001', padding: 24 }}>
-      <h2 style={{ textAlign: 'left', marginBottom: 24 }}>Trip Planner</h2>
-      <Stepper value={currentStep} onChange={handleStepChange} items={steps} style={{ marginBottom: 32 }} />
+    <div style={{ 
+      maxWidth: 1200, 
+      margin: '0 auto', 
+      padding: '24px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
+      {/* Header */}
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        borderRadius: '16px',
+        padding: '40px',
+        color: 'white',
+        marginBottom: '32px',
+        textAlign: 'center'
+      }}>
+        <h1 style={{
+          margin: 0,
+          fontSize: '32px',
+          fontWeight: 700,
+          marginBottom: '8px'
+        }}>
+          Trip Planner
+        </h1>
+        <p style={{
+          margin: 0,
+          fontSize: '18px',
+          opacity: 0.9
+        }}>
+          Plan your perfect getaway with our step-by-step guide
+        </p>
+      </div>
+
+      {/* Notifications */}
       {notification && (
         <NotificationGroup style={{ position: 'fixed', top: 100, right: 24, zIndex: 2000 }}>
           <Notification
@@ -84,37 +143,328 @@ const TripPlanner: React.FC = () => {
           </Notification>
         </NotificationGroup>
       )}
-      {currentStep === 0 && (
-        <div style={{ maxWidth: 400, margin: '0 auto' }}>
-          <h3>Select Trip Dates</h3>
-          <div>
-            <Tooltip anchorElement="target" position="top" content="Pick your trip start and end dates">
-              <span style={{ display: 'block', width: '100%' }}>
-                <DateRangePicker 
-                  value={dateRange} 
-                  onChange={handleDateChange} 
-                  style={{ width: '100%', marginBottom: 16 }} 
-                />
-              </span>
-            </Tooltip>
+
+      {/* Progress Stepper */}
+      <div style={{
+        background: '#fff',
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+        padding: '32px',
+        marginBottom: '24px'
+      }}>
+        <Stepper 
+          value={currentStep} 
+          onChange={handleStepChange} 
+          items={steps} 
+          style={{ marginBottom: 0 }}
+        />
+      </div>
+
+      {/* Step Content */}
+      <div style={{
+        background: '#fff',
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+        padding: '40px',
+        minHeight: '500px'
+      }}>
+        
+        {/* Step 0: Trip Details */}
+        {currentStep === 0 && (
+          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 600,
+              color: '#2d3748',
+              marginBottom: '24px',
+              textAlign: 'center'
+            }}>
+              Tell us about your trip
+            </h2>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: 500,
+                color: '#4a5568',
+                marginBottom: '8px'
+              }}>
+                Trip Name
+              </label>
+              <Input
+                value={tripName}
+                onChange={(e) => setTripName(e.value)}
+                placeholder="e.g., Summer Vacation 2024"
+                style={{ width: '100%', padding: '12px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: 500,
+                color: '#4a5568',
+                marginBottom: '8px'
+              }}>
+                Destination
+              </label>
+              <Input
+                value={destination}
+                onChange={(e) => setDestination(e.value)}
+                placeholder="e.g., Paris, France"
+                style={{ width: '100%', padding: '12px' }}
+              />
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <Button 
+                themeColor="primary" 
+                size="large"
+                onClick={handleNext}
+                style={{
+                  padding: '12px 32px',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  borderRadius: '8px'
+                }}
+              >
+                Continue
+              </Button>
+            </div>
           </div>
-          <Button themeColor="primary" onClick={handleNext} style={{ marginTop: 8 }}>Next</Button>
-        </div>
-      )}
-      {currentStep === 1 && (
-        <div>
-          <h3>Plan Daily Itinerary</h3>
-          <div>
-            <Tooltip anchorElement="target" position="top" content="Add activities to your trip schedule">
-              <span>
-                <Button onClick={addItineraryItem} style={{ marginBottom: 12 }}>Add Activity</Button>
-              </span>
-            </Tooltip>
+        )}
+
+        {/* Step 1: Date Selection */}
+        {currentStep === 1 && (
+          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 600,
+              color: '#2d3748',
+              marginBottom: '24px',
+              textAlign: 'center'
+            }}>
+              When are you traveling?
+            </h2>
+            
+            <div style={{
+              background: '#f7fafc',
+              borderRadius: '12px',
+              padding: '24px',
+              marginBottom: '32px',
+              textAlign: 'center'
+            }}>
+              <p style={{
+                color: '#718096',
+                marginBottom: '16px',
+                fontSize: '14px'
+              }}>
+                Select your trip start and end dates
+              </p>
+              <DateRangePicker 
+                value={dateRange} 
+                onChange={handleDateChange} 
+                style={{ 
+                  width: '100%',
+                  maxWidth: '350px'
+                }} 
+              />
+            </div>
+
+            <div style={{ 
+              display: 'flex', 
+              gap: '12px', 
+              justifyContent: 'center' 
+            }}>
+              <Button 
+                onClick={handleBack}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  borderRadius: '8px'
+                }}
+              >
+                Back
+              </Button>
+              <Button 
+                themeColor="primary" 
+                size="large"
+                onClick={handleNext}
+                style={{
+                  padding: '12px 32px',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  borderRadius: '8px'
+                }}
+              >
+                Continue
+              </Button>
+            </div>
           </div>
-          <Scheduler data={itinerary} defaultView="day" style={{ background: '#f9f9f9', borderRadius: 8 }} />
-          <Button onClick={() => setCurrentStep(0)} style={{ marginTop: 16 }}>Back</Button>
-        </div>
-      )}
+        )}
+
+        {/* Step 2: Activity Planning */}
+        {currentStep === 2 && (
+          <div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '24px'
+            }}>
+              <h2 style={{
+                fontSize: '24px',
+                fontWeight: 600,
+                color: '#2d3748',
+                margin: 0
+              }}>
+                Plan Your Activities
+              </h2>
+              <Button 
+                themeColor="primary"
+                onClick={addActivity}
+                style={{
+                  padding: '8px 20px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  borderRadius: '6px'
+                }}
+              >
+                + Add Activity
+              </Button>
+            </div>
+
+            <div style={{
+              background: '#f8fafc',
+              borderRadius: '12px',
+              padding: '16px',
+              marginBottom: '24px'
+            }}>
+              <Scheduler 
+                data={itinerary} 
+                defaultView="week"
+                style={{ 
+                  minHeight: '400px',
+                  border: 'none'
+                }} 
+              />
+            </div>
+
+            <div style={{ 
+              display: 'flex', 
+              gap: '12px', 
+              justifyContent: 'center' 
+            }}>
+              <Button 
+                onClick={handleBack}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  borderRadius: '8px'
+                }}
+              >
+                Back
+              </Button>
+              <Button 
+                themeColor="primary" 
+                size="large"
+                onClick={handleNext}
+                style={{
+                  padding: '12px 32px',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  borderRadius: '8px'
+                }}
+              >
+                Review Trip
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Review & Save */}
+        {currentStep === 3 && (
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 600,
+              color: '#2d3748',
+              marginBottom: '32px',
+              textAlign: 'center'
+            }}>
+              Review Your Trip Plan
+            </h2>
+
+            <div style={{
+              background: '#f7fafc',
+              borderRadius: '12px',
+              padding: '24px',
+              marginBottom: '24px'
+            }}>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: 600,
+                color: '#2d3748',
+                marginBottom: '16px'
+              }}>
+                Trip Summary
+              </h3>
+              
+              <div style={{ marginBottom: '12px' }}>
+                <strong>Trip Name:</strong> {tripName || 'Unnamed Trip'}
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <strong>Destination:</strong> {destination || 'Not specified'}
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <strong>Dates:</strong> {
+                  dateRange.start && dateRange.end 
+                    ? `${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}`
+                    : 'Not selected'
+                }
+              </div>
+              <div>
+                <strong>Activities:</strong> {itinerary.length} planned activities
+              </div>
+            </div>
+
+            <div style={{ 
+              display: 'flex', 
+              gap: '12px', 
+              justifyContent: 'center' 
+            }}>
+              <Button 
+                onClick={handleBack}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  borderRadius: '8px'
+                }}
+              >
+                Back
+              </Button>
+              <Button 
+                themeColor="primary" 
+                size="large"
+                onClick={saveTripPlan}
+                style={{
+                  padding: '12px 32px',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  background: 'linear-gradient(45deg, #48bb78, #38a169)',
+                  border: 'none'
+                }}
+              >
+                Save Trip Plan
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/*
         To connect to a backend, replace local state with CRUD hooks:
         - useTrips() to fetch trips
