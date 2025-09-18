@@ -45,10 +45,10 @@ const TripPlanner: React.FC = () => {
   ]);
 
   const steps = [
-    { label: 'Trip Details', text: 'Basic Information' },
-    { label: 'Select Dates', text: 'Choose Your Dates' },
-    { label: 'Plan Activities', text: 'Build Your Itinerary' },
-    { label: 'Review & Save', text: 'Finalize Your Trip' }
+    { label: 'Trip Details' },
+    { label: 'Select Dates' },
+    { label: 'Plan Activities' },
+    { label: 'Review & Save' }
   ];
 
   const handleStepChange = (event: StepperChangeEvent) => {
@@ -100,34 +100,40 @@ const TripPlanner: React.FC = () => {
 
   return (
     <div style={{ 
-      maxWidth: 1200, 
+      width: '100%',
+      minWidth: '1400px',
       margin: '0 auto', 
-      padding: '24px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      padding: '32px 48px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      minHeight: '100vh',
+      background: '#f8fafc'
     }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        borderRadius: '16px',
-        padding: '40px',
+        borderRadius: '24px',
+        padding: '60px 80px',
         color: 'white',
-        marginBottom: '32px',
-        textAlign: 'center'
+        marginBottom: '40px',
+        textAlign: 'center',
+        boxShadow: '0 10px 40px rgba(102, 126, 234, 0.3)'
       }}>
         <h1 style={{
           margin: 0,
-          fontSize: '32px',
+          fontSize: '48px',
           fontWeight: 700,
-          marginBottom: '8px'
+          marginBottom: '16px',
+          letterSpacing: '-1px'
         }}>
           Trip Planner
         </h1>
         <p style={{
           margin: 0,
-          fontSize: '18px',
-          opacity: 0.9
+          fontSize: '24px',
+          opacity: 0.95,
+          fontWeight: 300
         }}>
-          Plan your perfect getaway with our step-by-step guide
+          Plan your perfect getaway with our comprehensive step-by-step guide
         </p>
       </div>
 
@@ -147,75 +153,121 @@ const TripPlanner: React.FC = () => {
       {/* Progress Stepper */}
       <div style={{
         background: '#fff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        padding: '32px',
-        marginBottom: '24px'
+        borderRadius: '24px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        padding: '50px 80px',
+        marginBottom: '40px'
       }}>
+        <div style={{
+          marginBottom: '32px',
+          textAlign: 'center'
+        }}>
+          <h3 style={{
+            color: '#4a5568',
+            fontSize: '22px',
+            fontWeight: 600,
+            margin: 0
+          }}>
+            Step {currentStep + 1} of {steps.length}
+          </h3>
+        </div>
         <Stepper 
           value={currentStep} 
           onChange={handleStepChange} 
           items={steps} 
-          style={{ marginBottom: 0 }}
+          style={{ 
+            marginBottom: 0,
+            fontSize: '18px'
+          }}
         />
+        <div style={{
+          marginTop: '32px',
+          textAlign: 'center',
+          color: '#718096',
+          fontSize: '20px',
+          fontWeight: 600
+        }}>
+          {steps[currentStep]?.label}
+        </div>
       </div>
 
       {/* Step Content */}
       <div style={{
         background: '#fff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        padding: '40px',
-        minHeight: '500px'
+        borderRadius: '24px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        padding: '60px 80px',
+        minHeight: '700px'
       }}>
         
         {/* Step 0: Trip Details */}
         {currentStep === 0 && (
-          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+          <div style={{ width: '100%' }}>
             <h2 style={{
-              fontSize: '24px',
-              fontWeight: 600,
+              fontSize: '36px',
+              fontWeight: 700,
               color: '#2d3748',
-              marginBottom: '24px',
+              marginBottom: '48px',
               textAlign: 'center'
             }}>
               Tell us about your trip
             </h2>
             
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 500,
-                color: '#4a5568',
-                marginBottom: '8px'
-              }}>
-                Trip Name
-              </label>
-              <Input
-                value={tripName}
-                onChange={(e) => setTripName(e.value)}
-                placeholder="e.g., Summer Vacation 2024"
-                style={{ width: '100%', padding: '12px' }}
-              />
-            </div>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '60px',
+              marginBottom: '60px',
+              maxWidth: '1000px',
+              margin: '0 auto'
+            }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  color: '#2d3748',
+                  marginBottom: '16px'
+                }}>
+                  Trip Name
+                </label>
+                <Input
+                  value={tripName}
+                  onChange={(e) => setTripName(e.value)}
+                  placeholder="e.g., Summer Vacation 2024"
+                  style={{ 
+                    width: '100%', 
+                    padding: '20px',
+                    fontSize: '18px',
+                    borderRadius: '12px',
+                    minHeight: '60px'
+                  }}
+                />
+              </div>
 
-            <div style={{ marginBottom: '32px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 500,
-                color: '#4a5568',
-                marginBottom: '8px'
-              }}>
-                Destination
-              </label>
-              <Input
-                value={destination}
-                onChange={(e) => setDestination(e.value)}
-                placeholder="e.g., Paris, France"
-                style={{ width: '100%', padding: '12px' }}
-              />
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  color: '#2d3748',
+                  marginBottom: '16px'
+                }}>
+                  Destination
+                </label>
+                <Input
+                  value={destination}
+                  onChange={(e) => setDestination(e.value)}
+                  placeholder="e.g., Paris, France"
+                  style={{ 
+                    width: '100%', 
+                    padding: '20px',
+                    fontSize: '18px',
+                    borderRadius: '12px',
+                    minHeight: '60px'
+                  }}
+                />
+              </div>
             </div>
 
             <div style={{ textAlign: 'center' }}>
@@ -224,13 +276,14 @@ const TripPlanner: React.FC = () => {
                 size="large"
                 onClick={handleNext}
                 style={{
-                  padding: '12px 32px',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  borderRadius: '8px'
+                  padding: '20px 60px',
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  borderRadius: '12px',
+                  minHeight: '60px'
                 }}
               >
-                Continue
+                Continue to Dates →
               </Button>
             </div>
           </div>
@@ -238,12 +291,12 @@ const TripPlanner: React.FC = () => {
 
         {/* Step 1: Date Selection */}
         {currentStep === 1 && (
-          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+          <div style={{ width: '100%' }}>
             <h2 style={{
-              fontSize: '24px',
-              fontWeight: 600,
+              fontSize: '36px',
+              fontWeight: 700,
               color: '#2d3748',
-              marginBottom: '24px',
+              marginBottom: '48px',
               textAlign: 'center'
             }}>
               When are you traveling?
@@ -251,55 +304,68 @@ const TripPlanner: React.FC = () => {
             
             <div style={{
               background: '#f7fafc',
-              borderRadius: '12px',
-              padding: '24px',
-              marginBottom: '32px',
-              textAlign: 'center'
+              borderRadius: '20px',
+              padding: '60px',
+              marginBottom: '60px',
+              textAlign: 'center',
+              maxWidth: '800px',
+              margin: '0 auto 60px auto'
             }}>
               <p style={{
-                color: '#718096',
-                marginBottom: '16px',
-                fontSize: '14px'
+                color: '#4a5568',
+                marginBottom: '32px',
+                fontSize: '22px',
+                fontWeight: 500
               }}>
                 Select your trip start and end dates
               </p>
-              <DateRangePicker 
-                value={dateRange} 
-                onChange={handleDateChange} 
-                style={{ 
-                  width: '100%',
-                  maxWidth: '350px'
-                }} 
-              />
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <DateRangePicker 
+                  value={dateRange} 
+                  onChange={handleDateChange} 
+                  style={{ 
+                    width: '100%',
+                    maxWidth: '600px',
+                    fontSize: '18px',
+                    minHeight: '60px'
+                  }} 
+                />
+              </div>
             </div>
 
             <div style={{ 
               display: 'flex', 
-              gap: '12px', 
+              gap: '20px', 
               justifyContent: 'center' 
             }}>
               <Button 
                 onClick={handleBack}
                 style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
-                  borderRadius: '8px'
+                  padding: '18px 40px',
+                  fontSize: '18px',
+                  borderRadius: '12px',
+                  minHeight: '60px'
                 }}
               >
-                Back
+                ← Back to Details
               </Button>
               <Button 
                 themeColor="primary" 
                 size="large"
                 onClick={handleNext}
                 style={{
-                  padding: '12px 32px',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  borderRadius: '8px'
+                  padding: '20px 60px',
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  borderRadius: '12px',
+                  minHeight: '60px'
                 }}
               >
-                Continue
+                Plan Activities →
               </Button>
             </div>
           </div>
@@ -307,16 +373,16 @@ const TripPlanner: React.FC = () => {
 
         {/* Step 2: Activity Planning */}
         {currentStep === 2 && (
-          <div>
+          <div style={{ width: '100%' }}>
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: '24px'
+              marginBottom: '48px'
             }}>
               <h2 style={{
-                fontSize: '24px',
-                fontWeight: 600,
+                fontSize: '36px',
+                fontWeight: 700,
                 color: '#2d3748',
                 margin: 0
               }}>
@@ -326,59 +392,65 @@ const TripPlanner: React.FC = () => {
                 themeColor="primary"
                 onClick={addActivity}
                 style={{
-                  padding: '8px 20px',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  borderRadius: '6px'
+                  padding: '16px 32px',
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  borderRadius: '12px',
+                  minHeight: '60px'
                 }}
               >
-                + Add Activity
+                + Add New Activity
               </Button>
             </div>
 
             <div style={{
               background: '#f8fafc',
-              borderRadius: '12px',
-              padding: '16px',
-              marginBottom: '24px'
+              borderRadius: '20px',
+              padding: '40px',
+              marginBottom: '48px',
+              width: '100%'
             }}>
               <Scheduler 
                 data={itinerary} 
                 defaultView="week"
                 style={{ 
-                  minHeight: '400px',
-                  border: 'none'
+                  minHeight: '600px',
+                  border: 'none',
+                  width: '100%',
+                  fontSize: '16px'
                 }} 
               />
             </div>
 
             <div style={{ 
               display: 'flex', 
-              gap: '12px', 
+              gap: '20px', 
               justifyContent: 'center' 
             }}>
               <Button 
                 onClick={handleBack}
                 style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
-                  borderRadius: '8px'
+                  padding: '18px 40px',
+                  fontSize: '18px',
+                  borderRadius: '12px',
+                  minHeight: '60px'
                 }}
               >
-                Back
+                ← Back to Dates
               </Button>
               <Button 
                 themeColor="primary" 
                 size="large"
                 onClick={handleNext}
                 style={{
-                  padding: '12px 32px',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  borderRadius: '8px'
+                  padding: '20px 60px',
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  borderRadius: '12px',
+                  minHeight: '60px'
                 }}
               >
-                Review Trip
+                Review & Save →
               </Button>
             </div>
           </div>
@@ -386,79 +458,253 @@ const TripPlanner: React.FC = () => {
 
         {/* Step 3: Review & Save */}
         {currentStep === 3 && (
-          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h2 style={{
-              fontSize: '24px',
-              fontWeight: 600,
-              color: '#2d3748',
-              marginBottom: '32px',
-              textAlign: 'center'
-            }}>
-              Review Your Trip Plan
-            </h2>
-
+          <div style={{ width: '100%' }}>
             <div style={{
-              background: '#f7fafc',
-              borderRadius: '12px',
-              padding: '24px',
-              marginBottom: '24px'
+              textAlign: 'center',
+              marginBottom: '60px'
             }}>
-              <h3 style={{
-                fontSize: '18px',
+              <div style={{
+                display: 'inline-block',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #48bb78, #38a169)',
+                borderRadius: '50px',
+                color: 'white',
+                fontSize: '16px',
                 fontWeight: 600,
+                marginBottom: '24px'
+              }}>
+                STEP 4 OF 4 - FINAL REVIEW
+              </div>
+              <h2 style={{
+                fontSize: '40px',
+                fontWeight: 700,
                 color: '#2d3748',
+                margin: 0,
                 marginBottom: '16px'
               }}>
-                Trip Summary
-              </h3>
-              
-              <div style={{ marginBottom: '12px' }}>
-                <strong>Trip Name:</strong> {tripName || 'Unnamed Trip'}
+                Review Your Trip Plan
+              </h2>
+              <p style={{
+                fontSize: '22px',
+                color: '#718096',
+                margin: 0
+              }}>
+                Everything looks perfect? Let's save your amazing adventure!
+              </p>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '48px',
+              marginBottom: '60px'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #ebf8ff, #bee3f8)',
+                borderRadius: '24px',
+                padding: '40px',
+                border: '2px solid #90cdf4'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '32px'
+                }}>
+                  <div style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    background: '#3182ce',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '20px'
+                  }}>
+                    <span style={{
+                      color: 'white',
+                      fontSize: '24px',
+                      fontWeight: 'bold'
+                    }}>📍</span>
+                  </div>
+                  <h3 style={{
+                    fontSize: '28px',
+                    fontWeight: 700,
+                    color: '#2d3748',
+                    margin: 0
+                  }}>
+                    Trip Details
+                  </h3>
+                </div>
+                
+                <div style={{ 
+                  marginBottom: '24px',
+                  fontSize: '18px',
+                  lineHeight: 1.8,
+                  color: '#2d3748'
+                }}>
+                  <div style={{
+                    padding: '16px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.3)'
+                  }}>
+                    <strong style={{ fontSize: '20px' }}>Trip Name:</strong>
+                    <div style={{ marginTop: '8px', color: '#4a5568', fontSize: '18px' }}>
+                      {tripName || 'Unnamed Trip'}
+                    </div>
+                  </div>
+                  <div style={{
+                    padding: '16px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.3)'
+                  }}>
+                    <strong style={{ fontSize: '20px' }}>Destination:</strong>
+                    <div style={{ marginTop: '8px', color: '#4a5568', fontSize: '18px' }}>
+                      {destination || 'Not specified'}
+                    </div>
+                  </div>
+                  <div style={{
+                    padding: '16px 0'
+                  }}>
+                    <strong style={{ fontSize: '20px' }}>Travel Dates:</strong>
+                    <div style={{ marginTop: '8px', color: '#4a5568', fontSize: '18px' }}>
+                      {dateRange.start && dateRange.end 
+                        ? `${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}`
+                        : 'Not selected'
+                      }
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div style={{ marginBottom: '12px' }}>
-                <strong>Destination:</strong> {destination || 'Not specified'}
-              </div>
-              <div style={{ marginBottom: '12px' }}>
-                <strong>Dates:</strong> {
-                  dateRange.start && dateRange.end 
-                    ? `${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}`
-                    : 'Not selected'
-                }
-              </div>
-              <div>
-                <strong>Activities:</strong> {itinerary.length} planned activities
+
+              <div style={{
+                background: 'linear-gradient(135deg, #f0fff4, #c6f6d5)',
+                borderRadius: '24px',
+                padding: '40px',
+                border: '2px solid #9ae6b4'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '32px'
+                }}>
+                  <div style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    background: '#38a169',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '20px'
+                  }}>
+                    <span style={{
+                      color: 'white',
+                      fontSize: '24px',
+                      fontWeight: 'bold'
+                    }}>🗓️</span>
+                  </div>
+                  <h3 style={{
+                    fontSize: '28px',
+                    fontWeight: 700,
+                    color: '#2d3748',
+                    margin: 0
+                  }}>
+                    Activities Summary
+                  </h3>
+                </div>
+                
+                <div style={{ 
+                  marginBottom: '20px',
+                  fontSize: '18px',
+                  lineHeight: 1.6,
+                  color: '#2d3748'
+                }}>
+                  <div style={{
+                    padding: '16px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.3)',
+                    marginBottom: '20px'
+                  }}>
+                    <strong style={{ fontSize: '20px' }}>Total Activities: {itinerary.length}</strong>
+                  </div>
+                </div>
+                
+                <div style={{ 
+                  maxHeight: '280px', 
+                  overflowY: 'auto',
+                  background: 'rgba(255,255,255,0.6)',
+                  borderRadius: '16px',
+                  padding: '20px'
+                }}>
+                  {itinerary.map((activity, index) => (
+                    <div key={activity.id} style={{
+                      padding: '16px 0',
+                      borderBottom: index < itinerary.length - 1 ? '1px solid rgba(0,0,0,0.1)' : 'none',
+                      fontSize: '17px'
+                    }}>
+                      <div style={{ 
+                        fontWeight: 600,
+                        color: '#2d3748',
+                        marginBottom: '6px',
+                        fontSize: '18px'
+                      }}>
+                        {activity.title}
+                      </div>
+                      <div style={{ 
+                        color: '#718096',
+                        fontSize: '15px'
+                      }}>
+                        {activity.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - {activity.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
             <div style={{ 
               display: 'flex', 
-              gap: '12px', 
-              justifyContent: 'center' 
+              gap: '24px', 
+              justifyContent: 'center',
+              alignItems: 'center'
             }}>
               <Button 
                 onClick={handleBack}
                 style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
-                  borderRadius: '8px'
+                  padding: '20px 40px',
+                  fontSize: '18px',
+                  borderRadius: '12px',
+                  background: '#f7fafc',
+                  border: '2px solid #e2e8f0',
+                  color: '#4a5568',
+                  minHeight: '60px'
                 }}
               >
-                Back
+                ← Back to Activities
               </Button>
               <Button 
                 themeColor="primary" 
                 size="large"
                 onClick={saveTripPlan}
                 style={{
-                  padding: '12px 32px',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  borderRadius: '8px',
-                  background: 'linear-gradient(45deg, #48bb78, #38a169)',
-                  border: 'none'
+                  padding: '24px 60px',
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #48bb78, #38a169)',
+                  border: 'none',
+                  boxShadow: '0 12px 32px rgba(72, 187, 120, 0.4)',
+                  transform: 'translateY(0)',
+                  transition: 'all 0.2s ease',
+                  minHeight: '70px'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-3px)';
+                  e.currentTarget.style.boxShadow = '0 16px 40px rgba(72, 187, 120, 0.5)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(72, 187, 120, 0.4)';
                 }}
               >
-                Save Trip Plan
+                🚀 Save Complete Trip Plan
               </Button>
             </div>
           </div>
